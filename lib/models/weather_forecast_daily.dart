@@ -14,7 +14,7 @@ class WeatherForecast {
   WeatherForecast.fromJson(Map<String, dynamic> json) {
     city = json['city'] != null ? City.fromJson(json['city']) : null;
     cod = json['cod'];
-    message = json['message'] as double;
+    message = json['message'].toDouble();
     cnt = json['cnt'];
     if (json['list'] != null) {
       list = <WeatherList>[];
@@ -85,8 +85,8 @@ class Coord {
   Coord({this.lon, this.lat});
 
   Coord.fromJson(Map<String, dynamic> json) {
-    lon = json['lon'] as double;
-    lat = json['lat'] as double;
+    lon = json['lon'].toDouble();
+    lat = json['lat'].toDouble();
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +112,7 @@ class WeatherList {
   int? clouds;
   double? pop;
   double? rain;
+  double? snow;
 
   WeatherList(
       {this.dt,
@@ -127,7 +128,8 @@ class WeatherList {
       this.gust,
       this.clouds,
       this.pop,
-      this.rain});
+      this.rain,
+      this.snow});
 
   WeatherList.fromJson(Map<String, dynamic> json) {
     dt = json['dt'];
@@ -145,12 +147,13 @@ class WeatherList {
         weather!.add(Weather.fromJson(v));
       });
     }
-    speed = json['speed'] as double;
+    speed = json['speed'].toDouble();
     deg = json['deg'];
-    gust = json['gust'] as double;
+    gust = json['gust'].toDouble();
     clouds = json['clouds'];
-    pop = json['pop'] as double;
-    rain = json['rain'] as double;
+    pop = json['pop'].toDouble();
+    rain = (json['rain'] ?? 0.0).toDouble(); // Это поле может отсутвствовать
+    snow = (json['snow'] ?? 0.0).toDouble(); // Это поле может отсутвствовать
   }
 
   Map<String, dynamic> toJson() {
@@ -175,6 +178,7 @@ class WeatherList {
     data['clouds'] = clouds;
     data['pop'] = pop;
     data['rain'] = rain;
+    data['snow'] = snow;
     return data;
   }
 }
@@ -190,12 +194,12 @@ class Temp {
   Temp({this.day, this.min, this.max, this.night, this.eve, this.morn});
 
   Temp.fromJson(Map<String, dynamic> json) {
-    day = json['day'] as double;
-    min = json['min'] as double;
-    max = json['max'] as double;
-    night = json['night'] as double;
-    eve = json['eve'] as double;
-    morn = json['morn'] as double;
+    day = json['day'].toDouble();
+    min = json['min'].toDouble();
+    max = json['max'].toDouble();
+    night = json['night'].toDouble();
+    eve = json['eve'].toDouble();
+    morn = json['morn'].toDouble();
   }
 
   Map<String, dynamic> toJson() {
@@ -219,10 +223,10 @@ class FeelsLike {
   FeelsLike({this.day, this.night, this.eve, this.morn});
 
   FeelsLike.fromJson(Map<String, dynamic> json) {
-    day = json['day'] as double;
-    night = json['night'] as double;
-    eve = json['eve'] as double;
-    morn = json['morn'] as double;
+    day = json['day'].toDouble();
+    night = json['night'].toDouble();
+    eve = json['eve'].toDouble();
+    morn = json['morn'].toDouble();
   }
 
   Map<String, dynamic> toJson() {

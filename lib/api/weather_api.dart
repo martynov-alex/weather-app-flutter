@@ -25,7 +25,7 @@ class WeatherApi {
 
     var response = await http.get(uri);
     if (kDebugMode) {
-      print('Response: ${response?.body}');
+      print('Response: ${response.body}');
     }
 
     if (response.statusCode == 200) {
