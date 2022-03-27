@@ -2,6 +2,8 @@
 // https://javiercbk.github.io/json_to_dart/
 // request = https://api.openweathermap.org/data/2.5/forecast/daily?q=London&appid=1369dd6b5ae78fc9952261ab9aa236b4&units=metric
 
+import 'package:weather_app_example/utilites/constants.dart';
+
 class WeatherForecast {
   City? city;
   String? cod;
@@ -180,6 +182,11 @@ class WeatherList {
     data['rain'] = rain;
     data['snow'] = snow;
     return data;
+  }
+
+  String getIconUrl() {
+    final String iconName = weather![0].icon ?? '';
+    return Constants.weatherImagesUrl + iconName + '@2x.png';
   }
 }
 
