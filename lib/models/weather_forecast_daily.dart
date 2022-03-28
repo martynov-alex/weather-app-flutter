@@ -184,9 +184,11 @@ class WeatherList {
     return data;
   }
 
-  String getIconUrl() {
+  String getIconUrl({bool x2Size = false}) {
     final String iconName = weather![0].icon ?? '';
-    return Constants.weatherImagesUrl + iconName + '@2x.png';
+    return x2Size
+        ? Constants.weatherImagesUrl + iconName + '@2x.png'
+        : Constants.weatherImagesUrl + iconName + '.png';
   }
 }
 

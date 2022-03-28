@@ -9,7 +9,7 @@ class TempView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List forecastList = snapshot.data!.list!;
-    String icon = forecastList[0].getIconUrl();
+    String icon = forecastList[0].getIconUrl(x2Size: true);
     String temp = forecastList[0].temp.day.toStringAsFixed(0);
     String description = forecastList[0].weather[0].description.toUpperCase();
     return Container(
