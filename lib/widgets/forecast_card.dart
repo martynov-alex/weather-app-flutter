@@ -34,7 +34,7 @@ class ForecastCard extends StatelessWidget {
             children: [
               Text(
                 '${minTemp.toStringAsFixed(0)} °C',
-                style: TextStyle(color: Colors.white, fontSize: 30),
+                style: TextStyle(color: Colors.white, fontSize: 25),
               ),
               Image.network(icon, color: Colors.white),
             ],

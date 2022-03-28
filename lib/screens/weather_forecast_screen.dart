@@ -1,17 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:weather_app_example/api/weather_api.dart';
 import 'package:weather_app_example/models/weather_forecast_daily.dart';
+import 'package:weather_app_example/screens/city_screen.dart';
 import 'package:weather_app_example/widgets/bottom_list_view.dart';
 import 'package:weather_app_example/widgets/city_view.dart';
 import 'package:weather_app_example/widgets/detail_view.dart';
 import 'package:weather_app_example/widgets/temp_view.dart';
 
 class WeatherForecastScreen extends StatefulWidget {
-  const WeatherForecastScreen({Key? key}) : super(key: key);
+  const WeatherForecastScreen({Key? key, required this.locationWeather})
+      : super(key: key);
+
+  final WeatherForecast? locationWeather;
 
   @override
   State<WeatherForecastScreen> createState() => _WeatherForecastScreenState();
@@ -19,14 +21,14 @@ class WeatherForecastScreen extends StatefulWidget {
 
 class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
   late Future<WeatherForecast> forecastObject;
-  String _cityName = 'London';
+  late String _cityName;
 
   @override
   void initState() {
     super.initState();
-    forecastObject =
-        WeatherApi().fetchWeatherForecastWithCity(cityName: _cityName);
-    //forecastObject.then((weather) => print(weather.list?[0].weather?[0].main));
+    if (widget.locationWeather != null) {
+      forecastObject = Future.value(widget.locationWeather);
+    }
   }
 
   @override
@@ -36,14 +38,35 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
         backgroundColor: Colors.black,
         title: const Text('Openweathermap.org'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.my_location),
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              forecastObject = WeatherApi().fetchWeatherForecast();
+            });
+          },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.location_city),
-            onPressed: () {},
+            icon: const Icon(Icons.location_city),
+            onPressed: () async {
+              String? selectedCity = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => CityScreen(),
+                ),
+              );
+              if (selectedCity != null) {
+                setState(() {
+                  _cityName = selectedCity;
+                  forecastObject = WeatherApi().fetchWeatherForecast(
+                    cityName: _cityName,
+                    isCity: true,
+                  );
+                });
+              }
+            },
           )
         ],
       ),
@@ -56,25 +79,23 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
                 if (snapshot.hasData) {
                   return Column(
                     children: [
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       CityView(snapshot: snapshot),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TempView(snapshot: snapshot),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       DetailView(snapshot: snapshot),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       BottomListView(snapshot: snapshot),
                     ],
                   );
                 } else {
-                  return Center(
-                    child: SpinKitPulse(
-                      color: Colors.black,
-                      size: 100.0,
-                    ),
+                  return const Center(
+                    child: Text('City not found\n Please, enter correct city',
+                        style: TextStyle(fontSize: 25),
+                        textAlign: TextAlign.center),
                   );
                 }
-                //
               },
             ),
           )
